@@ -281,7 +281,7 @@ export default function PantryManager({ familyInfo, metricsSettings }: PantryMan
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
                         <h4 className="font-semibold text-gray-900">{item.name}</h4>
-                        <span className={`px-2 py-1 rounded-full ${getCategoryColor(item.category)}`}>
+                        <span className={`px-2 py-1 text-xs rounded-full ${getCategoryColor(item.category)}`}>
                           {item.category}
                         </span>
                         {isLowStock && (
