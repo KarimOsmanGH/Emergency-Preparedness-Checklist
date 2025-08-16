@@ -93,7 +93,13 @@ export default function BooksManager() {
   useEffect(() => {
     const saved = localStorage.getItem('books')
     if (saved) {
-      setBooks(JSON.parse(saved))
+      const parsedSaved = JSON.parse(saved)
+      if (parsedSaved.length > 0) {
+        setBooks(parsedSaved)
+      } else {
+        // If saved data is empty array, use prefilled data and save it
+        localStorage.setItem('books', JSON.stringify(books))
+      }
     } else {
       // If no saved data, save the initial prefilled data to localStorage
       localStorage.setItem('books', JSON.stringify(books))

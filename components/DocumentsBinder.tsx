@@ -158,7 +158,13 @@ export default function DocumentsBinder() {
   useEffect(() => {
     const saved = localStorage.getItem('documents')
     if (saved) {
-      setDocuments(JSON.parse(saved))
+      const parsedSaved = JSON.parse(saved)
+      if (parsedSaved.length > 0) {
+        setDocuments(parsedSaved)
+      } else {
+        // If saved data is empty array, use prefilled data and save it
+        localStorage.setItem('documents', JSON.stringify(documents))
+      }
     } else {
       // If no saved data, save the initial prefilled data to localStorage
       localStorage.setItem('documents', JSON.stringify(documents))
