@@ -18,14 +18,24 @@ interface ExportManagerProps {
 export default function ExportManager({ familyInfo, checklistItems, metricsSettings }: ExportManagerProps) {
   const [copied, setCopied] = useState(false)
   const [exportFormat, setExportFormat] = useState<'json' | 'csv' | 'txt'>('json')
+  const [refreshKey, setRefreshKey] = useState(0)
 
-  // Get data from localStorage
+  // Get data from localStorage with debugging
   const getStoredData = () => {
     const pantryItems = JSON.parse(localStorage.getItem('pantryItems') || '[]')
     const books = JSON.parse(localStorage.getItem('books') || '[]')
     const contacts = JSON.parse(localStorage.getItem('contacts') || '[]')
     const frequencies = JSON.parse(localStorage.getItem('frequencies') || '[]')
     const documents = JSON.parse(localStorage.getItem('documents') || '[]')
+
+    // Debug logging
+    console.log('Export Data Debug:', {
+      pantryItems: pantryItems.length,
+      books: books.length,
+      contacts: contacts.length,
+      frequencies: frequencies.length,
+      documents: documents.length
+    })
 
     return {
       familyInfo,
@@ -38,6 +48,23 @@ export default function ExportManager({ familyInfo, checklistItems, metricsSetti
       metricsSettings,
       exportDate: new Date().toISOString(),
       appVersion: '1.0.0'
+    }
+  }
+
+  // Get current data counts for display
+  const getDataCounts = () => {
+    const pantryItems = JSON.parse(localStorage.getItem('pantryItems') || '[]')
+    const books = JSON.parse(localStorage.getItem('books') || '[]')
+    const contacts = JSON.parse(localStorage.getItem('contacts') || '[]')
+    const frequencies = JSON.parse(localStorage.getItem('frequencies') || '[]')
+    const documents = JSON.parse(localStorage.getItem('documents') || '[]')
+
+    return {
+      pantryItems: pantryItems.length,
+      books: books.length,
+      contacts: contacts.length,
+      frequencies: frequencies.length,
+      documents: documents.length
     }
   }
 
@@ -304,7 +331,15 @@ export default function ExportManager({ familyInfo, checklistItems, metricsSetti
 
         {/* Data Summary */}
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Data Summary</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Data Summary</h3>
+            <button
+              onClick={() => setRefreshKey(prev => prev + 1)}
+              className="text-xs text-brown-600 hover:text-brown-700"
+            >
+              Refresh
+            </button>
+          </div>
           
           <div className="space-y-3">
             <div className="flex justify-between items-center">
@@ -327,36 +362,44 @@ export default function ExportManager({ familyInfo, checklistItems, metricsSetti
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Pantry Items:</span>
               <span className="font-medium">
-                {JSON.parse(localStorage.getItem('pantryItems') || '[]').length}
+                {getDataCounts().pantryItems}
               </span>
             </div>
             
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Books:</span>
               <span className="font-medium">
-                {JSON.parse(localStorage.getItem('books') || '[]').length}
+                {getDataCounts().books}
               </span>
             </div>
             
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Contacts:</span>
               <span className="font-medium">
-                {JSON.parse(localStorage.getItem('contacts') || '[]').length}
+                {getDataCounts().contacts}
               </span>
             </div>
             
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">HAM Frequencies:</span>
               <span className="font-medium">
-                {JSON.parse(localStorage.getItem('frequencies') || '[]').length}
+                {getDataCounts().frequencies}
               </span>
             </div>
             
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Documents:</span>
               <span className="font-medium">
-                {JSON.parse(localStorage.getItem('documents') || '[]').length}
+                {getDataCounts().documents}
               </span>
+            </div>
+            
+            {/* Debug info - remove in production */}
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="text-xs text-gray-500">
+                <div>Debug: Refresh Key: {refreshKey}</div>
+                <div>Last Updated: {new Date().toLocaleTimeString()}</div>
+              </div>
             </div>
           </div>
         </div>
