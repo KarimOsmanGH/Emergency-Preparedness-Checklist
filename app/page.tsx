@@ -624,7 +624,7 @@ export default function Home() {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">Get the Notion Template</h3>
                   <p className="text-sm text-gray-600 mt-1">
-                    Want a more comprehensive emergency preparedness checklist? Check out our premium Notion template with advanced features and detailed planning tools.
+                    Check out our premium Notion template with advanced features and detailed planning tools.
                   </p>
                 </div>
               </div>
