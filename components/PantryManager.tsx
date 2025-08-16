@@ -289,9 +289,6 @@ export default function PantryManager({ familyInfo, metricsSettings }: PantryMan
                             Low Stock
                           </span>
                         )}
-                        <span className={`px-2 py-1 text-xs rounded-full ${getCategoryColor(item.category)}`}>
-                          {item.category}
-                        </span>
                       </div>
                       
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
