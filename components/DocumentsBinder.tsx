@@ -304,7 +304,7 @@ export default function DocumentsBinder() {
                       {doc.expiryDate && (
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 text-gray-400 mr-2" />
-                          <span className="font-medium">Expires:</span>
+                          <span className="font-bold">Expires:</span>
                           <span className="ml-1">{format(new Date(doc.expiryDate), 'MMM dd, yyyy')}</span>
                         </div>
                       )}

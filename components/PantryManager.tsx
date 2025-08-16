@@ -299,7 +299,7 @@ export default function PantryManager({ familyInfo, metricsSettings }: PantryMan
                           <span className="font-medium">Min Stock:</span> {item.minQuantity} {item.unit}
                         </div>
                         <div>
-                          <span className="font-medium">Expires:</span>
+                          <span className="font-bold">Expires:</span>
                           <span className={`ml-1 ${expiryStatus.color}`}>
                             {format(new Date(item.expiryDate), 'MMM dd, yyyy')}
                             {expiryStatus.status === 'expired' && ' (Expired)'}

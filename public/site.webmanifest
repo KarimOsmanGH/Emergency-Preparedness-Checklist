@@ -1,0 +1,25 @@
+{
+  "name": "Emergency Preparedness Checklist",
+  "short_name": "Emergency Prep",
+  "description": "Comprehensive emergency preparedness checklist with 200+ items, pantry management, HAM radio frequencies, emergency contacts, and document tracking.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#8B4513",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["safety", "productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr"
+} 
