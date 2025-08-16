@@ -285,9 +285,9 @@ export default function DocumentsBinder() {
                       {doc.isEssential && (
                         <Star className="h-4 w-4 text-brown-500 flex-shrink-0" />
                       )}
-                                             <span className={`px-2 py-1 text-xs rounded-full ${getCategoryColor(doc.category)}`}>
-                          {doc.category}
-                        </span>
+                      <span className={`px-2 py-1 text-xs rounded-full ${getCategoryColor(doc.category)}`}>
+                        {doc.category}
+                      </span>
                       {doc.isDigital && (
                         <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
                           Digital

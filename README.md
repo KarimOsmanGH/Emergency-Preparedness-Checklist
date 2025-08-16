@@ -53,6 +53,13 @@ A comprehensive Next.js application for emergency preparedness planning and mana
 - **Expiry date management** - Track document expiration
 - **Color-coded categories** - Personal ID, financial, medical, etc.
 
+### 💾 Data Export & Backup
+- **Multiple export formats** - JSON, CSV, and Text formats
+- **Complete data backup** - Export all your preparedness data
+- **Print functionality** - Print clean, formatted checklists
+- **Clipboard support** - Copy data to clipboard for sharing
+- **Data summary** - Overview of all your stored information
+
 ### 💾 Data Persistence
 - **Browser localStorage** - All data saved automatically
 - **Cross-session persistence** - Data survives browser restarts
@@ -118,6 +125,13 @@ npm start
 9. **Special Items** - Baby items, prostheses, special needs
 10. **Disaster Preparedness** - Planning, skills, family coordination
 
+### Export Options
+- **JSON Export** - Complete data backup for restoring to another device
+- **CSV Export** - Spreadsheet format for analysis and sharing
+- **Text Export** - Human-readable format perfect for printing
+- **Print Function** - Clean, formatted checklist for physical backup
+- **Copy to Clipboard** - Quick sharing of JSON data
+
 ### Color-Coded Organization
 - **Pantry**: Orange (canned), Yellow (grains), Blue (beverages), Purple (snacks), Green (condiments)
 - **Books**: Red (medical), Orange (survival), Yellow (food), Green (preparedness), Blue (navigation)
@@ -132,18 +146,21 @@ npm start
 - **Supply tracking** - Know what you have and what you need
 - **Contact management** - All emergency contacts in one place
 - **Document organization** - Important papers tracked and organized
+- **Data backup** - Export and share preparedness plans
 
 ### For Preppers
 - **Comprehensive checklist** - 200+ essential items covered
 - **HAM radio management** - Professional frequency tracking
 - **Resource library** - Essential books and materials
 - **Advanced planning** - Strategic preparedness tasks
+- **Data portability** - Export data for offline access
 
 ### For Emergency Responders
 - **Contact management** - Professional emergency contacts
 - **Document tracking** - Important paperwork organization
 - **Communication planning** - HAM radio frequency management
 - **Resource inventory** - Equipment and supply tracking
+- **Team coordination** - Share preparedness data with team members
 
 ## 🔧 Customization
 
@@ -160,6 +177,7 @@ npm start
 ### Data Export/Import
 - Data is stored in browser localStorage
 - Can be exported/imported via browser developer tools
+- Multiple export formats available
 - No external dependencies for data storage
 
 ## 📊 Data Structure
@@ -206,6 +224,16 @@ interface PantryItem {
 }
 ```
 
+## 🎁 Premium Notion Template
+
+Looking for a more comprehensive emergency preparedness solution? Check out our premium [Notion Emergency Preparedness Checklist Template](https://www.notion.com/templates/emergency-preparedness-checklist) featuring:
+
+- **Advanced planning tools** - More detailed preparedness workflows
+- **Team collaboration** - Share plans with family members
+- **Advanced templates** - Pre-built emergency scenarios
+- **Integration capabilities** - Connect with other Notion databases
+- **Professional layouts** - Enhanced visual organization
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -224,6 +252,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **HAM Radio Community** - For frequency information and emergency communication protocols
 - **Next.js Team** - For the excellent framework
 - **Tailwind CSS** - For the beautiful styling system
+- **Notion** - For the premium template platform
 
 ## 📞 Support
 
@@ -237,7 +266,7 @@ If you have any questions or need support:
 This application is actively maintained and updated with:
 - New preparedness items
 - Improved user interface
-- Additional features
+- Additional features including data export
 - Bug fixes and optimizations
 
 ---

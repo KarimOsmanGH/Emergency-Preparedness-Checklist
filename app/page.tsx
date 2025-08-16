@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Shield, Users, BookOpen, Radio, FileText, AlertTriangle, CheckCircle, Clock, Edit, Settings } from 'lucide-react'
+import { Shield, Users, BookOpen, Radio, FileText, AlertTriangle, CheckCircle, Clock, Edit, Settings, Download } from 'lucide-react'
 import ChecklistSection from '@/components/ChecklistSection'
 import PantryManager from '@/components/PantryManager'
 import BooksManager from '@/components/BooksManager'
 import EmergencyContacts from '@/components/EmergencyContacts'
 import HamRadioFrequencies from '@/components/HamRadioFrequencies'
 import DocumentsBinder from '@/components/DocumentsBinder'
+import ExportManager from '@/components/ExportManager'
 import { FamilyInfo, ChecklistItem } from '@/types'
 
 export default function Home() {
@@ -336,6 +337,7 @@ export default function Home() {
     { id: 'contacts', label: 'Contacts', icon: Users },
     { id: 'radio', label: 'HAM Radio', icon: Radio },
     { id: 'documents', label: 'Documents', icon: FileText },
+    { id: 'export', label: 'Export', icon: Download },
   ]
 
   return (
@@ -596,6 +598,47 @@ export default function Home() {
               {activeTab === 'contacts' && <EmergencyContacts />}
               {activeTab === 'radio' && <HamRadioFrequencies />}
               {activeTab === 'documents' && <DocumentsBinder />}
+              {activeTab === 'export' && (
+                <ExportManager 
+                  familyInfo={familyInfo}
+                  checklistItems={checklistItems}
+                  metricsSettings={metricsSettings}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Notion Template Promotion */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-blue-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="p-3 bg-blue-100 rounded-lg">
+                  <svg className="h-8 w-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466l1.823 1.447zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933l3.222-.233c.514-.047.793.233.793.746z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Get the Notion Template</h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Want a more comprehensive emergency preparedness checklist? Check out our premium Notion template with advanced features and detailed planning tools.
+                  </p>
+                </div>
+              </div>
+              <a
+                href="https://www.notion.com/templates/emergency-preparedness-checklist"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                <span>View Template</span>
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
             </div>
           </div>
         </div>
