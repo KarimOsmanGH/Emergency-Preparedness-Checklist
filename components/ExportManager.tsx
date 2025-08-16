@@ -52,6 +52,20 @@ export default function ExportManager({ familyInfo, checklistItems, metricsSetti
     const frequencies = JSON.parse(localStorage.getItem('frequencies') || '[]')
     const documents = JSON.parse(localStorage.getItem('documents') || '[]')
 
+    // Debug logging
+    console.log('Export Data Counts:', {
+      pantryItems: pantryItems.length,
+      books: books.length,
+      contacts: contacts.length,
+      frequencies: frequencies.length,
+      documents: documents.length,
+      pantryItemsData: pantryItems,
+      booksData: books,
+      contactsData: contacts,
+      frequenciesData: frequencies,
+      documentsData: documents
+    })
+
     return {
       pantryItems: pantryItems.length,
       books: books.length,
@@ -266,6 +280,117 @@ export default function ExportManager({ familyInfo, checklistItems, metricsSetti
     }
   }
 
+  const initializeMissingData = () => {
+    console.log('Initializing missing data...')
+    
+    // Check and initialize books
+    const books = localStorage.getItem('books')
+    if (!books || JSON.parse(books).length === 0) {
+      console.log('Initializing books data...')
+      const initialBooks = [
+        { id: '1', title: 'SAS Survival Handbook', author: 'John "Lofty" Wiseman', category: 'Survival', location: 'Home library', isEssential: true, notes: 'Comprehensive survival guide' },
+        { id: '2', title: 'Where There Is No Doctor', author: 'David Werner', category: 'Medical', location: 'Home library', isEssential: true, notes: 'Essential medical guide' },
+        { id: '3', title: 'The Prepper\'s Blueprint', author: 'Tess Pennington', category: 'Preparedness', location: 'Home library', isEssential: true, notes: 'Complete guide to emergency preparedness' },
+        { id: '4', title: 'Emergency Food Storage & Survival Handbook', author: 'Peggy Layton', category: 'Food Storage', location: 'Kitchen', isEssential: true, notes: 'Guide to storing emergency food' },
+        { id: '5', title: 'The Encyclopedia of Country Living', author: 'Carla Emery', category: 'Homesteading', location: 'Home library', isEssential: false, notes: 'Guide to self-sufficient living' },
+        { id: '6', title: 'First Aid Manual', author: 'American Red Cross', category: 'Medical', location: 'First aid kit', isEssential: true, notes: 'Official Red Cross first aid guide' },
+        { id: '7', title: 'The Complete Guide to Self-Sufficiency', author: 'John Seymour', category: 'Homesteading', location: 'Home library', isEssential: false, notes: 'Guide to living off the land' },
+        { id: '8', title: 'Emergency Preparedness for Families', author: 'Various Authors', category: 'Preparedness', location: 'Home library', isEssential: true, notes: 'Family-focused emergency planning' }
+      ]
+      localStorage.setItem('books', JSON.stringify(initialBooks))
+    }
+
+    // Check and initialize pantry items
+    const pantryItems = localStorage.getItem('pantryItems')
+    if (!pantryItems || JSON.parse(pantryItems).length === 0) {
+      console.log('Initializing pantry data...')
+      const initialPantry = [
+        { id: '1', name: 'Canned Beans', category: 'Canned Goods', quantity: 6, unit: 'cans', expiryDate: '2025-06-15', minQuantity: 2, notes: 'Black beans and kidney beans for protein' },
+        { id: '2', name: 'Rice', category: 'Grains & Pasta', quantity: 10, unit: 'pounds', expiryDate: '2026-03-20', minQuantity: 5, notes: 'Long grain white rice' },
+        { id: '3', name: 'Bottled Water', category: 'Beverages', quantity: 24, unit: 'bottles', expiryDate: '2025-12-01', minQuantity: 12, notes: '16.9 oz bottles' },
+        { id: '4', name: 'Protein Bars', category: 'Snacks', quantity: 8, unit: 'bars', expiryDate: '2024-11-30', minQuantity: 4, notes: 'High protein emergency food' },
+        { id: '5', name: 'Canned Tuna', category: 'Canned Goods', quantity: 4, unit: 'cans', expiryDate: '2025-08-10', minQuantity: 2, notes: 'Albacore tuna in water' },
+        { id: '6', name: 'Peanut Butter', category: 'Condiments', quantity: 2, unit: 'jars', expiryDate: '2025-02-15', minQuantity: 1, notes: 'Natural peanut butter' },
+        { id: '7', name: 'Crackers', category: 'Snacks', quantity: 3, unit: 'boxes', expiryDate: '2024-12-20', minQuantity: 1, notes: 'Saltine crackers' },
+        { id: '8', name: 'Canned Vegetables', category: 'Canned Goods', quantity: 8, unit: 'cans', expiryDate: '2025-07-05', minQuantity: 4, notes: 'Mixed vegetables and corn' }
+      ]
+      localStorage.setItem('pantryItems', JSON.stringify(initialPantry))
+    }
+
+    // Check and initialize contacts
+    const contacts = localStorage.getItem('contacts')
+    if (!contacts || JSON.parse(contacts).length === 0) {
+      console.log('Initializing contacts data...')
+      const initialContacts = [
+        { id: '1', name: 'Emergency Services', relationship: 'Emergency Services', phone: '911', email: '', address: 'Emergency', isEmergencyContact: true, notes: 'Primary emergency number' },
+        { id: '2', name: 'Local Police', relationship: 'Emergency Services', phone: '(555) 123-4567', email: 'police@city.gov', address: 'Police Station, City, State', isEmergencyContact: true, notes: 'Local police department' },
+        { id: '3', name: 'Fire Department', relationship: 'Emergency Services', phone: '(555) 234-5678', email: 'fire@city.gov', address: 'Fire Station, City, State', isEmergencyContact: true, notes: 'Local fire department' },
+        { id: '4', name: 'Family Doctor', relationship: 'Medical', phone: '(555) 345-6789', email: 'doctor@clinic.com', address: 'Medical Clinic, City, State', isEmergencyContact: false, notes: 'Primary care physician' },
+        { id: '5', name: 'Neighbor John', relationship: 'Neighbor', phone: '(555) 456-7890', email: 'john@email.com', address: '123 Main St, City, State', isEmergencyContact: false, notes: 'Trusted neighbor' },
+        { id: '6', name: 'Work Supervisor', relationship: 'Work', phone: '(555) 567-8901', email: 'supervisor@work.com', address: 'Work Office, City, State', isEmergencyContact: false, notes: 'Work emergency contact' },
+        { id: '7', name: 'Insurance Agent', relationship: 'Insurance', phone: '(555) 678-9012', email: 'agent@insurance.com', address: 'Insurance Office, City, State', isEmergencyContact: false, notes: 'Insurance claims contact' },
+        { id: '8', name: 'Utility Company', relationship: 'Utilities', phone: '(555) 678-9012', email: 'emergency@utility.com', address: 'Utility Office, City, State', isEmergencyContact: false, notes: 'Emergency utility services contact' }
+      ]
+      localStorage.setItem('contacts', JSON.stringify(initialContacts))
+    }
+
+    // Check and initialize frequencies
+    const frequencies = localStorage.getItem('frequencies')
+    if (!frequencies || JSON.parse(frequencies).length === 0) {
+      console.log('Initializing frequencies data...')
+      const initialFrequencies = [
+        { id: '1', frequency: '146.520 MHz', description: 'National Calling Frequency (2m) - FM', location: 'Emergency Communications', notes: 'National calling frequency for 2-meter band', isEmergency: true },
+        { id: '2', frequency: '446.000 MHz', description: 'National Calling Frequency (70cm) - FM', location: 'Emergency Communications', notes: 'National calling frequency for 70-centimeter band', isEmergency: true },
+        { id: '3', frequency: '52.525 MHz', description: 'National Calling Frequency (6m) - FM', location: 'Emergency Communications', notes: 'National calling frequency for 6-meter band', isEmergency: true },
+        { id: '4', frequency: '7.074 MHz', description: '40m Emergency Frequency - LSB', location: 'Emergency Communications', notes: '40-meter emergency frequency', isEmergency: true },
+        { id: '5', frequency: '14.074 MHz', description: '20m Emergency Frequency - USB', location: 'Emergency Communications', notes: '20-meter emergency frequency', isEmergency: true },
+        { id: '6', frequency: '162.400 MHz', description: 'NOAA Weather Radio - FM', location: 'Weather Information', notes: 'Primary NOAA weather radio frequency', isEmergency: false },
+        { id: '7', frequency: '162.425 MHz', description: 'NOAA Weather Radio (Alt) - FM', location: 'Weather Information', notes: 'Alternative NOAA weather frequency', isEmergency: false },
+        { id: '8', frequency: '162.450 MHz', description: 'NOAA Weather Radio (Alt) - FM', location: 'Weather Information', notes: 'Alternative NOAA weather frequency', isEmergency: false },
+        { id: '9', frequency: '162.475 MHz', description: 'NOAA Weather Radio (Alt) - FM', location: 'Weather Information', notes: 'Alternative NOAA weather frequency', isEmergency: false },
+        { id: '10', frequency: '162.500 MHz', description: 'NOAA Weather Radio (Alt) - FM', location: 'Weather Information', notes: 'Alternative NOAA weather frequency', isEmergency: false },
+        { id: '11', frequency: '14.313 MHz', description: 'International Emergency Frequency - USB', location: 'Emergency Communications', notes: 'International Frequency for Emergency Communications', isEmergency: true },
+        { id: '12', frequency: '3.690 MHz', description: 'Long Distance Communication - LSB', location: 'Long Distance', notes: 'Commonly used for long-distance communication', isEmergency: false },
+        { id: '13', frequency: '7.200 MHz', description: 'Nighttime Emergency Frequency - LSB', location: 'Emergency Communications', notes: 'Nighttime Frequency for Emergency Communications', isEmergency: true },
+        { id: '14', frequency: '147.000 MHz', description: 'Local Communication - FM', location: 'Local Communications', notes: 'Commonly used for local communication in the United States', isEmergency: false },
+        { id: '15', frequency: '28.400 MHz', description: 'DX Communication - USB', location: 'Long Distance', notes: 'Popular for DXing (communicating with distant stations)', isEmergency: false },
+        { id: '16', frequency: '50.125 MHz', description: 'Six-Meter Communication - FM', location: 'Long Distance', notes: 'Six-meter band for longer distance communication', isEmergency: false },
+        { id: '17', frequency: '144.200 MHz', description: 'Two-Meter Communication - FM', location: 'Local Communications', notes: 'Two-meter band for local and emergency communication', isEmergency: false },
+        { id: '18', frequency: '10.140 MHz', description: 'Digital Communication - USB', location: 'Digital Modes', notes: 'Popular for digital modes such as PSK31', isEmergency: false },
+        { id: '19', frequency: '21.200 MHz', description: 'DX and Contesting - USB', location: 'Long Distance', notes: 'Popular for DXing and contesting', isEmergency: false },
+        { id: '20', frequency: '145.500 MHz', description: 'Simplex Communication - FM', location: 'Local Communications', notes: 'Simplex communication without repeater', isEmergency: false }
+      ]
+      localStorage.setItem('frequencies', JSON.stringify(initialFrequencies))
+    }
+
+    // Check and initialize documents
+    const documents = localStorage.getItem('documents')
+    if (!documents || JSON.parse(documents).length === 0) {
+      console.log('Initializing documents data...')
+      const initialDocuments = [
+        { id: '1', name: 'Birth Certificates', category: 'Personal Identification', location: 'Fireproof safe', isDigital: false, notes: 'Birth certificates for all family members', isEssential: true },
+        { id: '2', name: 'Passports', category: 'Personal Identification', location: 'Fireproof safe', isDigital: false, notes: 'Current passports for all family members', isEssential: true },
+        { id: '3', name: 'Social Security Cards', category: 'Personal Identification', location: 'Fireproof safe', isDigital: false, notes: 'Social security cards for all family members', isEssential: true },
+        { id: '4', name: 'Driver\'s Licenses', category: 'Personal Identification', location: 'Wallet/Purse', isDigital: false, notes: 'Current driver\'s licenses', isEssential: true },
+        { id: '5', name: 'Marriage Certificate', category: 'Personal Identification', location: 'Fireproof safe', isDigital: false, notes: 'Marriage certificate', isEssential: true },
+        { id: '6', name: 'Property Deed', category: 'Property', location: 'Fireproof safe', isDigital: false, notes: 'Property deed and title documents', isEssential: true },
+        { id: '7', name: 'Vehicle Titles', category: 'Property', location: 'Fireproof safe', isDigital: false, notes: 'Vehicle titles and registration documents', isEssential: true },
+        { id: '8', name: 'Insurance Policies', category: 'Insurance', location: 'Fireproof safe', isDigital: true, notes: 'Home, auto, life, and health insurance policies', isEssential: true },
+        { id: '9', name: 'Medical Records', category: 'Medical', location: 'Fireproof safe', isDigital: true, notes: 'Medical history, prescriptions, and vaccination records', isEssential: true },
+        { id: '10', name: 'Financial Documents', category: 'Financial', location: 'Fireproof safe', isDigital: true, notes: 'Bank statements, investment accounts, retirement plans', isEssential: true },
+        { id: '11', name: 'Wills and Trusts', category: 'Legal', location: 'Fireproof safe', isDigital: false, notes: 'Wills, trusts, and power of attorney documents', isEssential: true },
+        { id: '12', name: 'Tax Returns', category: 'Financial', location: 'Fireproof safe', isDigital: true, notes: 'Last 3 years of tax returns', isEssential: false },
+        { id: '13', name: 'Pet Records', category: 'Medical', location: 'Fireproof safe', isDigital: false, notes: 'Pet vaccination records and medical history', isEssential: false },
+        { id: '14', name: 'Emergency Contact List', category: 'Emergency', location: 'Multiple locations', isDigital: true, notes: 'List of emergency contacts and important phone numbers', isEssential: true },
+        { id: '15', name: 'Emergency Plan', category: 'Emergency', location: 'Multiple locations', isDigital: true, notes: 'Family emergency plan and evacuation procedures', isEssential: true }
+      ]
+      localStorage.setItem('documents', JSON.stringify(initialDocuments))
+    }
+
+    setRefreshKey(prev => prev + 1)
+    console.log('Data initialization complete!')
+  }
+
   return (
     <div className="p-6">
       <div className="mb-6">
@@ -311,6 +436,25 @@ export default function ExportManager({ familyInfo, checklistItems, metricsSetti
                 <span>{copied ? 'Copied!' : 'Copy JSON'}</span>
               </button>
             </div>
+
+            <button
+              onClick={initializeMissingData}
+              className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+            >
+              Initialize Missing Data
+            </button>
+
+            <button
+              onClick={() => {
+                console.log('Force refresh clicked')
+                setRefreshKey(prev => prev + 1)
+                // Force reload all data
+                window.location.reload()
+              }}
+              className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+            >
+              Force Refresh Data
+            </button>
 
             <button
               onClick={printData}
