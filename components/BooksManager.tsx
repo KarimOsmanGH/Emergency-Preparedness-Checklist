@@ -220,7 +220,7 @@ export default function BooksManager() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
                       <div>
                         <span className="font-medium">Category:</span>
-                        <span className={`ml-2 px-2 py-1 border rounded-full ${getCategoryColor(book.category)}`}>
+                        <span className={`ml-2 px-2 py-1 text-xs rounded-full ${getCategoryColor(book.category)}`}>
                           {book.category}
                         </span>
                       </div>
