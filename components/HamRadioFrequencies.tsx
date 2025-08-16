@@ -181,6 +181,9 @@ export default function HamRadioFrequencies() {
     const saved = localStorage.getItem('hamFrequencies')
     if (saved) {
       setFrequencies(JSON.parse(saved))
+    } else {
+      // If no saved data, save the initial prefilled data to localStorage
+      localStorage.setItem('hamFrequencies', JSON.stringify(frequencies))
     }
   }, [])
 
@@ -267,7 +270,7 @@ export default function HamRadioFrequencies() {
 
       {/* Your Frequencies */}
       <div className="bg-white rounded-lg border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="bg-gradient-to-r from-brown-50 to-brown-100 px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Your Frequencies</h3>
         </div>
         

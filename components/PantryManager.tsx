@@ -114,6 +114,9 @@ export default function PantryManager({ familyInfo, metricsSettings }: PantryMan
     const saved = localStorage.getItem('pantryItems')
     if (saved) {
       setPantryItems(JSON.parse(saved))
+    } else {
+      // If no saved data, save the initial prefilled data to localStorage
+      localStorage.setItem('pantryItems', JSON.stringify(pantryItems))
     }
   }, [])
 
@@ -260,7 +263,7 @@ export default function PantryManager({ familyInfo, metricsSettings }: PantryMan
 
       {/* Pantry Items */}
       <div className="bg-white rounded-lg border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="bg-gradient-to-r from-brown-50 to-brown-100 px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Your Pantry Items</h3>
         </div>
         

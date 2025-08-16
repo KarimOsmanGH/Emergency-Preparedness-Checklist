@@ -94,6 +94,9 @@ export default function BooksManager() {
     const saved = localStorage.getItem('books')
     if (saved) {
       setBooks(JSON.parse(saved))
+    } else {
+      // If no saved data, save the initial prefilled data to localStorage
+      localStorage.setItem('books', JSON.stringify(books))
     }
   }, [])
 
@@ -193,7 +196,7 @@ export default function BooksManager() {
 
       {/* Your Books */}
       <div className="bg-white rounded-lg border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="bg-gradient-to-r from-brown-50 to-brown-100 px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Your Books Collection</h3>
         </div>
         

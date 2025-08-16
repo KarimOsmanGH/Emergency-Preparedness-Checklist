@@ -103,6 +103,9 @@ export default function EmergencyContacts() {
     const saved = localStorage.getItem('emergencyContacts')
     if (saved) {
       setContacts(JSON.parse(saved))
+    } else {
+      // If no saved data, save the initial prefilled data to localStorage
+      localStorage.setItem('emergencyContacts', JSON.stringify(contacts))
     }
   }, [])
 
@@ -192,7 +195,7 @@ export default function EmergencyContacts() {
 
       {/* Emergency Contacts */}
       <div className="bg-white rounded-lg border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="bg-gradient-to-r from-brown-50 to-brown-100 px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Your Emergency Contacts</h3>
         </div>
         
