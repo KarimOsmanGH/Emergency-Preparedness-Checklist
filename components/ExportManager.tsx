@@ -28,14 +28,7 @@ export default function ExportManager({ familyInfo, checklistItems, metricsSetti
     const frequencies = JSON.parse(localStorage.getItem('frequencies') || '[]')
     const documents = JSON.parse(localStorage.getItem('documents') || '[]')
 
-    // Debug logging
-    console.log('Export Data Debug:', {
-      pantryItems: pantryItems.length,
-      books: books.length,
-      contacts: contacts.length,
-      frequencies: frequencies.length,
-      documents: documents.length
-    })
+
 
     return {
       familyInfo,
@@ -394,13 +387,7 @@ export default function ExportManager({ familyInfo, checklistItems, metricsSetti
               </span>
             </div>
             
-            {/* Debug info - remove in production */}
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <div className="text-xs text-gray-500">
-                <div>Debug: Refresh Key: {refreshKey}</div>
-                <div>Last Updated: {new Date().toLocaleTimeString()}</div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>

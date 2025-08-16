@@ -159,6 +159,9 @@ export default function DocumentsBinder() {
     const saved = localStorage.getItem('documents')
     if (saved) {
       setDocuments(JSON.parse(saved))
+    } else {
+      // If no saved data, save the initial prefilled data to localStorage
+      localStorage.setItem('documents', JSON.stringify(documents))
     }
   }, [])
 
