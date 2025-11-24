@@ -125,7 +125,7 @@ export default function ChecklistSection({ checklistItems, onUpdateItem, familyI
 
         {/* Checklist Items */}
         {selectedCategory === null ? (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {checklistItems.map((category) => {
               const progress = getCategoryProgress(category)
               return (
