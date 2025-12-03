@@ -5,19 +5,11 @@
 
 'use client'
 
-import { createContext, useContext, ReactNode } from 'react'
+import { createContext, useContext, ReactNode, useState, useEffect } from 'react'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
-import { FamilyInfo } from '@/types'
-import { STORAGE_KEYS, DEFAULT_FAMILY_INFO, DEFAULT_METRICS_SETTINGS } from '@/lib/constants'
-
-export interface MetricsSettings {
-  volume: string
-  weight: string
-  temperature: string
-  distance: string
-}
-
-export type Theme = 'light' | 'dark' | 'system'
+import { FamilyInfo, MetricsSettings, Theme } from '@/types'
+import { STORAGE_KEYS } from '@/lib/constants'
+import { DEFAULT_FAMILY_INFO, DEFAULT_METRICS_SETTINGS } from '@/lib/defaultData'
 
 interface AppContextType {
   theme: Theme
@@ -26,11 +18,13 @@ interface AppContextType {
   setFamilyInfo: (info: FamilyInfo | ((prev: FamilyInfo) => FamilyInfo)) => void
   metricsSettings: MetricsSettings
   setMetricsSettings: (settings: MetricsSettings | ((prev: MetricsSettings) => MetricsSettings)) => void
+  isLoading: boolean
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const [isLoading, setIsLoading] = useState(true)
   const [theme, setTheme] = useLocalStorage<Theme>(STORAGE_KEYS.THEME, 'light')
   const [familyInfo, setFamilyInfo] = useLocalStorage<FamilyInfo>(
     STORAGE_KEYS.FAMILY_INFO,
@@ -41,6 +35,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     DEFAULT_METRICS_SETTINGS
   )
 
+  // Handle initial loading state
+  useEffect(() => {
+    setIsLoading(false)
+  }, [])
+
   return (
     <AppContext.Provider
       value={{
@@ -49,7 +48,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         familyInfo,
         setFamilyInfo,
         metricsSettings,
-        setMetricsSettings
+        setMetricsSettings,
+        isLoading
       }}
     >
       {children}

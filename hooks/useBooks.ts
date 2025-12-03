@@ -3,32 +3,12 @@
  * Custom hook for managing books with localStorage
  */
 
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useLocalStorage } from './useLocalStorage'
 import { Book } from '@/types'
 import { STORAGE_KEYS } from '@/lib/constants'
 import { generateId } from '@/lib/utils'
-
-const DEFAULT_BOOKS: Book[] = [
-  {
-    id: '1',
-    title: 'SAS Survival Handbook',
-    author: 'John "Lofty" Wiseman',
-    category: 'Survival',
-    location: 'Home library',
-    isEssential: true,
-    notes: 'Comprehensive survival guide covering wilderness, urban, and disaster scenarios'
-  },
-  {
-    id: '2',
-    title: 'Where There Is No Doctor',
-    author: 'David Werner',
-    category: 'Medical',
-    location: 'Home library',
-    isEssential: true,
-    notes: 'Essential medical guide for when professional help is unavailable'
-  }
-]
+import { DEFAULT_BOOKS } from '@/lib/defaultData'
 
 export function useBooks() {
   const [books, setBooks] = useLocalStorage<Book[]>(
@@ -59,11 +39,31 @@ export function useBooks() {
     setBooks(prev => prev.filter(book => !ids.includes(book.id)))
   }, [setBooks])
 
+  // Computed values
+  const essentialBooks = useMemo(() => 
+    books.filter(book => book.isEssential),
+    [books]
+  )
+
+  const booksByCategory = useMemo(() => {
+    const grouped: Record<string, Book[]> = {}
+    books.forEach(book => {
+      if (!grouped[book.category]) {
+        grouped[book.category] = []
+      }
+      grouped[book.category].push(book)
+    })
+    return grouped
+  }, [books])
+
   return {
     books,
+    setBooks,
     addBook,
     updateBook,
     deleteBook,
-    deleteMultiple
+    deleteMultiple,
+    essentialBooks,
+    booksByCategory
   }
 }
