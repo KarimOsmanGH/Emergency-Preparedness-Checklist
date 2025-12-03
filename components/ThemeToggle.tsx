@@ -29,14 +29,23 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+      className="relative p-2.5 rounded-xl bg-sand-100 dark:bg-forest-800 hover:bg-sand-200 dark:hover:bg-forest-700 border border-sand-200 dark:border-forest-700 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2 focus:ring-offset-sand-50 dark:focus:ring-offset-forest-950"
       aria-label="Toggle theme"
     >
-      {theme === 'light' ? (
-        <Moon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-      ) : (
-        <Sun className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-      )}
+      <div className="relative w-5 h-5">
+        {theme === 'light' ? (
+          <Moon className="h-5 w-5 text-forest-600 dark:text-forest-400 transition-transform duration-300 group-hover:rotate-12" />
+        ) : (
+          <Sun className="h-5 w-5 text-amber-500 transition-transform duration-300 group-hover:rotate-45" />
+        )}
+      </div>
+      
+      {/* Glow effect on hover */}
+      <div className={`absolute inset-0 rounded-xl transition-opacity duration-300 opacity-0 group-hover:opacity-100 ${
+        theme === 'light' 
+          ? 'bg-gradient-to-br from-indigo-400/10 to-purple-400/10' 
+          : 'bg-gradient-to-br from-amber-400/10 to-orange-400/10'
+      }`} />
     </button>
   )
 }

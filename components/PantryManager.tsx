@@ -6,7 +6,7 @@
 'use client'
 
 import { useState, useMemo, useCallback } from 'react'
-import { Plus, AlertTriangle, Package, Trash2, Edit, Search, X } from 'lucide-react'
+import { Plus, AlertTriangle, Package, Trash2, Edit, Search, X, Calendar, Scale } from 'lucide-react'
 import { format } from 'date-fns'
 import { PantryItem, MetricsSettings } from '@/types'
 import { usePantryItems } from '@/hooks/usePantryItems'
@@ -146,18 +146,18 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
   return (
     <div className="p-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-2xl font-bold text-forest-900 dark:text-sand-50 mb-2">
             Pantry Management
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-sand-600 dark:text-sand-400">
             Track your emergency food supplies and get alerts for expiring items and low stock.
           </p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-brown-600 text-white rounded-lg hover:bg-brown-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brown-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+          className="btn-primary"
           aria-label="Add new pantry item"
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
@@ -168,48 +168,52 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
       {/* Search */}
       <div className="mb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" aria-hidden="true" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-sand-400" aria-hidden="true" />
           <input
             type="text"
             placeholder="Search pantry items..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-brown-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+            className="input-field pl-12 pr-12"
             aria-label="Search pantry items"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-lg text-sand-400 hover:text-sand-600 dark:hover:text-sand-300 hover:bg-sand-100 dark:hover:bg-forest-800 transition-colors"
               aria-label="Clear search"
             >
-              <X className="h-5 w-5" aria-hidden="true" />
+              <X className="h-4 w-4" aria-hidden="true" />
             </button>
           )}
         </div>
       </div>
 
       {/* Alerts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {expiringItems.length > 0 && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4" role="alert">
-            <div className="flex items-center space-x-2 mb-2">
-              <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" aria-hidden="true" />
-              <h3 className="font-semibold text-red-800 dark:text-red-300">Expiring Items</h3>
+          <div className="alert-box danger" role="alert">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/30">
+                <Calendar className="h-5 w-5 text-red-600 dark:text-red-400" aria-hidden="true" />
+              </div>
+              <h3 className="font-bold text-red-800 dark:text-red-300">Expiring Items</h3>
             </div>
-            <p className="text-sm text-red-700 dark:text-red-400">
+            <p className="text-sm text-red-700 dark:text-red-400 ml-12">
               {expiringItems.length} item(s) are expiring soon or have expired.
             </p>
           </div>
         )}
         
         {lowStockItems.length > 0 && (
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4" role="alert">
-            <div className="flex items-center space-x-2 mb-2">
-              <Package className="h-5 w-5 text-yellow-600 dark:text-yellow-400" aria-hidden="true" />
-              <h3 className="font-semibold text-yellow-800 dark:text-yellow-300">Low Stock Alert</h3>
+          <div className="alert-box warning" role="alert">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/30">
+                <Scale className="h-5 w-5 text-amber-600 dark:text-amber-400" aria-hidden="true" />
+              </div>
+              <h3 className="font-bold text-amber-800 dark:text-amber-300">Low Stock Alert</h3>
             </div>
-            <p className="text-sm text-yellow-700 dark:text-yellow-400">
+            <p className="text-sm text-amber-700 dark:text-amber-400 ml-12">
               {lowStockItems.length} item(s) are running low on stock.
             </p>
           </div>
@@ -217,74 +221,103 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
       </div>
 
       {/* Pantry Items List */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-        <div className="bg-gradient-to-r from-brown-50 to-brown-100 dark:from-brown-900/30 dark:to-brown-800/30 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Your Pantry Items ({filteredItems.length})
-          </h3>
+      <div className="tactical-card overflow-hidden">
+        <div className="section-header">
+          <div className="flex items-center gap-3">
+            <Package className="h-5 w-5 text-forest-600 dark:text-forest-400" />
+            <h3 className="text-lg font-bold text-forest-900 dark:text-sand-50">
+              Your Pantry Items
+            </h3>
+            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-forest-100 dark:bg-forest-800 text-forest-700 dark:text-forest-300">
+              {filteredItems.length}
+            </span>
+          </div>
         </div>
         
-        <div className="divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="divide-y divide-sand-200 dark:divide-forest-700">
           {filteredItems.length === 0 ? (
-            <div className="p-6 text-center text-gray-500 dark:text-gray-400">
-              <Package className="h-12 w-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" aria-hidden="true" />
-              <p>{searchTerm ? 'No items match your search.' : 'No pantry items added yet. Add your first item to get started!'}</p>
+            <div className="p-12 text-center">
+              <div className="w-16 h-16 rounded-2xl icon-container mx-auto mb-4 flex items-center justify-center">
+                <Package className="h-8 w-8 text-forest-400" aria-hidden="true" />
+              </div>
+              <p className="text-sand-500 dark:text-sand-400 font-medium">
+                {searchTerm ? 'No items match your search.' : 'No pantry items added yet.'}
+              </p>
+              {!searchTerm && (
+                <button
+                  onClick={() => setShowAddModal(true)}
+                  className="mt-4 text-sm font-medium text-forest-600 dark:text-forest-400 hover:text-forest-700 dark:hover:text-forest-300 transition-colors"
+                >
+                  Add your first item →
+                </button>
+              )}
             </div>
           ) : (
-            filteredItems.map((item) => {
+            filteredItems.map((item, index) => {
               const expiryStatus = getExpiryStatus(item.expiryDate)
               const isLowStock = item.quantity <= item.minQuantity
               
               return (
-                <div key={item.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
-                  <div className="flex items-center justify-between">
+                <div 
+                  key={item.id} 
+                  className="p-5 hover:bg-sand-50 dark:hover:bg-forest-800/50 transition-colors animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <h4 className="font-semibold text-gray-900 dark:text-white">{item.name}</h4>
-                        <span className={`px-2 py-1 text-xs rounded-full border ${getCategoryColor(item.category, PANTRY_CATEGORY_COLORS)}`}>
+                      <div className="flex flex-wrap items-center gap-2 mb-3">
+                        <h4 className="font-bold text-forest-900 dark:text-sand-50">{item.name}</h4>
+                        <span className={`px-2.5 py-1 text-xs font-medium rounded-full border ${getCategoryColor(item.category, PANTRY_CATEGORY_COLORS)}`}>
                           {item.category}
                         </span>
                         {isLowStock && (
-                          <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 text-xs rounded-full">
+                          <span className="px-2.5 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-xs font-semibold rounded-full border border-amber-200 dark:border-amber-700">
                             Low Stock
                           </span>
                         )}
                       </div>
                       
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 dark:text-gray-400">
-                        <div>
-                          <span className="font-medium">Quantity:</span> {item.quantity} {item.unit}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sand-500 dark:text-sand-400">Qty:</span>
+                          <span className="font-semibold text-forest-700 dark:text-forest-300">{item.quantity} {item.unit}</span>
                         </div>
-                        <div>
-                          <span className="font-medium">Min Stock:</span> {item.minQuantity} {item.unit}
+                        <div className="flex items-center gap-2">
+                          <span className="text-sand-500 dark:text-sand-400">Min:</span>
+                          <span className="font-medium text-sand-600 dark:text-sand-300">{item.minQuantity} {item.unit}</span>
                         </div>
-                        <div>
-                          <span className="font-medium">Expires:</span>
-                          <span className={`ml-1 ${expiryStatus.color} dark:${expiryStatus.color.replace('600', '400')}`}>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sand-500 dark:text-sand-400">Expires:</span>
+                          <span className={`font-medium ${
+                            expiryStatus.status === 'expired' ? 'text-red-600 dark:text-red-400' :
+                            expiryStatus.status === 'expiring' ? 'text-amber-600 dark:text-amber-400' :
+                            'text-forest-600 dark:text-forest-400'
+                          }`}>
                             {format(new Date(item.expiryDate), 'MMM dd, yyyy')}
                             {expiryStatus.status === 'expired' && ' (Expired)'}
-                            {expiryStatus.status === 'expiring' && ` (${expiryStatus.days} days)`}
+                            {expiryStatus.status === 'expiring' && ` (${expiryStatus.days}d)`}
                           </span>
                         </div>
                         {item.notes && (
                           <div className="col-span-2 md:col-span-1">
-                            <span className="font-medium">Notes:</span> {item.notes}
+                            <span className="text-sand-500 dark:text-sand-400">Notes:</span>
+                            <span className="ml-1 text-sand-600 dark:text-sand-300">{item.notes}</span>
                           </div>
                         )}
                       </div>
                     </div>
                     
-                    <div className="flex items-center space-x-2 ml-4">
+                    <div className="flex items-center gap-1">
                       <button
                         onClick={() => setEditingItem(item)}
-                        className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-brown-500 rounded"
+                        className="p-2.5 rounded-xl text-sand-400 hover:text-forest-600 dark:hover:text-forest-400 hover:bg-sand-100 dark:hover:bg-forest-800 transition-all focus:outline-none focus:ring-2 focus:ring-forest-500"
                         aria-label={`Edit ${item.name}`}
                       >
                         <Edit className="h-4 w-4" aria-hidden="true" />
                       </button>
                       <button
                         onClick={() => handleDeleteClick(item.id)}
-                        className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
+                        className="p-2.5 rounded-xl text-sand-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all focus:outline-none focus:ring-2 focus:ring-red-500"
                         aria-label={`Delete ${item.name}`}
                       >
                         <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -301,29 +334,29 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
       {/* Add/Edit Modal */}
       {(showAddModal || editingItem) && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          className="modal-overlay"
           onClick={(e) => e.target === e.currentTarget && closeModal()}
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
         >
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-              <h3 id="modal-title" className="text-lg font-semibold text-gray-900 dark:text-white">
+          <div className="modal-content">
+            <div className="px-6 py-5 border-b border-sand-200 dark:border-forest-700 flex justify-between items-center">
+              <h3 id="modal-title" className="text-lg font-bold text-forest-900 dark:text-sand-50">
                 {editingItem ? 'Edit Item' : 'Add Pantry Item'}
               </h3>
               <button
                 onClick={closeModal}
-                className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+                className="p-2 rounded-xl text-sand-400 hover:text-sand-600 dark:hover:text-sand-300 hover:bg-sand-100 dark:hover:bg-forest-800 transition-colors"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="p-6 space-y-5">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="name" className="block text-sm font-semibold text-forest-900 dark:text-sand-100 mb-2">
                   Item Name *
                 </label>
                 <input
@@ -331,28 +364,25 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
                   type="text"
                   value={currentItem.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-brown-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
-                    errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                  }`}
+                  className={`input-field ${errors.name ? 'border-red-500 focus:ring-red-500' : ''}`}
+                  placeholder="e.g., Canned Beans"
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? 'name-error' : undefined}
                 />
                 {errors.name && (
-                  <p id="name-error" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>
+                  <p id="name-error" className="mt-2 text-sm text-red-600 dark:text-red-400">{errors.name}</p>
                 )}
               </div>
               
               <div>
-                <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="category" className="block text-sm font-semibold text-forest-900 dark:text-sand-100 mb-2">
                   Category *
                 </label>
                 <select
                   id="category"
                   value={currentItem.category}
                   onChange={(e) => handleInputChange('category', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-brown-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
-                    errors.category ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                  }`}
+                  className={`select-field ${errors.category ? 'border-red-500 focus:ring-red-500' : ''}`}
                   aria-invalid={!!errors.category}
                   aria-describedby={errors.category ? 'category-error' : undefined}
                 >
@@ -362,13 +392,13 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
                   ))}
                 </select>
                 {errors.category && (
-                  <p id="category-error" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.category}</p>
+                  <p id="category-error" className="mt-2 text-sm text-red-600 dark:text-red-400">{errors.category}</p>
                 )}
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label htmlFor="quantity" className="block text-sm font-semibold text-forest-900 dark:text-sand-100 mb-2">
                     Quantity *
                   </label>
                   <input
@@ -377,19 +407,19 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
                     min="0"
                     value={currentItem.quantity}
                     onChange={(e) => handleInputChange('quantity', parseInt(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brown-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="input-field"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="unit" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label htmlFor="unit" className="block text-sm font-semibold text-forest-900 dark:text-sand-100 mb-2">
                     Unit
                   </label>
                   <select
                     id="unit"
                     value={currentItem.unit}
                     onChange={(e) => handleInputChange('unit', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brown-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="select-field"
                   >
                     {getUnitsForCategory(currentItem.category).map(unit => (
                       <option key={unit} value={unit}>{unit}</option>
@@ -399,7 +429,7 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
               </div>
               
               <div>
-                <label htmlFor="expiryDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="expiryDate" className="block text-sm font-semibold text-forest-900 dark:text-sand-100 mb-2">
                   Expiry Date *
                 </label>
                 <input
@@ -407,19 +437,17 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
                   type="date"
                   value={currentItem.expiryDate}
                   onChange={(e) => handleInputChange('expiryDate', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-brown-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
-                    errors.expiryDate ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                  }`}
+                  className={`input-field ${errors.expiryDate ? 'border-red-500 focus:ring-red-500' : ''}`}
                   aria-invalid={!!errors.expiryDate}
                   aria-describedby={errors.expiryDate ? 'expiryDate-error' : undefined}
                 />
                 {errors.expiryDate && (
-                  <p id="expiryDate-error" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.expiryDate}</p>
+                  <p id="expiryDate-error" className="mt-2 text-sm text-red-600 dark:text-red-400">{errors.expiryDate}</p>
                 )}
               </div>
               
               <div>
-                <label htmlFor="minQuantity" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="minQuantity" className="block text-sm font-semibold text-forest-900 dark:text-sand-100 mb-2">
                   Minimum Stock Level
                 </label>
                 <input
@@ -428,12 +456,12 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
                   min="0"
                   value={currentItem.minQuantity}
                   onChange={(e) => handleInputChange('minQuantity', parseInt(e.target.value) || 0)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brown-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="input-field"
                 />
               </div>
               
               <div>
-                <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label htmlFor="notes" className="block text-sm font-semibold text-forest-900 dark:text-sand-100 mb-2">
                   Notes
                 </label>
                 <textarea
@@ -441,22 +469,22 @@ export default function PantryManager({ metricsSettings }: PantryManagerProps) {
                   value={currentItem.notes}
                   onChange={(e) => handleInputChange('notes', e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-brown-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="input-field resize-none"
                   placeholder="Optional notes about this item"
                 />
               </div>
               
-              <div className="flex justify-end space-x-3 pt-4">
+              <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+                  className="btn-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-brown-600 text-white rounded-md hover:bg-brown-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brown-500"
+                  className="btn-primary"
                 >
                   {editingItem ? 'Update' : 'Add'} Item
                 </button>
