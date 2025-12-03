@@ -3,35 +3,17 @@
  * Custom hook for managing HAM radio frequencies with localStorage
  */
 
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useLocalStorage } from './useLocalStorage'
 import { HamFrequency } from '@/types'
 import { STORAGE_KEYS } from '@/lib/constants'
 import { generateId } from '@/lib/utils'
-
-const DEFAULT_FREQUENCIES: HamFrequency[] = [
-  {
-    id: '1',
-    frequency: '146.52 MHz',
-    description: 'National Calling Frequency (2m) - FM',
-    location: 'Emergency Communications',
-    notes: 'Primary emergency calling frequency for 2-meter band',
-    isEmergency: true
-  },
-  {
-    id: '2',
-    frequency: '446.00 MHz',
-    description: 'National Calling Frequency (70cm) - FM',
-    location: 'Emergency Communications',
-    notes: 'Primary emergency calling frequency for 70cm band',
-    isEmergency: true
-  }
-]
+import { DEFAULT_HAM_FREQUENCIES } from '@/lib/defaultData'
 
 export function useHamFrequencies() {
   const [frequencies, setFrequencies] = useLocalStorage<HamFrequency[]>(
     STORAGE_KEYS.HAM_FREQUENCIES,
-    DEFAULT_FREQUENCIES
+    DEFAULT_HAM_FREQUENCIES
   )
 
   const addFrequency = useCallback((frequency: Omit<HamFrequency, 'id'>) => {
@@ -57,11 +39,31 @@ export function useHamFrequencies() {
     setFrequencies(prev => prev.filter(freq => !ids.includes(freq.id)))
   }, [setFrequencies])
 
+  // Computed values
+  const emergencyFrequencies = useMemo(() => 
+    frequencies.filter(freq => freq.isEmergency),
+    [frequencies]
+  )
+
+  const frequenciesByLocation = useMemo(() => {
+    const grouped: Record<string, HamFrequency[]> = {}
+    frequencies.forEach(freq => {
+      if (!grouped[freq.location]) {
+        grouped[freq.location] = []
+      }
+      grouped[freq.location].push(freq)
+    })
+    return grouped
+  }, [frequencies])
+
   return {
     frequencies,
+    setFrequencies,
     addFrequency,
     updateFrequency,
     deleteFrequency,
-    deleteMultiple
+    deleteMultiple,
+    emergencyFrequencies,
+    frequenciesByLocation
   }
 }

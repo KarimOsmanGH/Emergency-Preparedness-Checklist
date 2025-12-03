@@ -3,13 +3,12 @@
  * Custom hook for managing documents with localStorage
  */
 
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useLocalStorage } from './useLocalStorage'
 import { Document } from '@/types'
 import { STORAGE_KEYS } from '@/lib/constants'
-import { generateId } from '@/lib/utils'
-
-const DEFAULT_DOCUMENTS: Document[] = []
+import { generateId, getExpiryStatus } from '@/lib/utils'
+import { DEFAULT_DOCUMENTS } from '@/lib/defaultData'
 
 export function useDocuments() {
   const [documents, setDocuments] = useLocalStorage<Document[]>(
@@ -40,11 +39,41 @@ export function useDocuments() {
     setDocuments(prev => prev.filter(doc => !ids.includes(doc.id)))
   }, [setDocuments])
 
+  // Computed values
+  const essentialDocuments = useMemo(() => 
+    documents.filter(doc => doc.isEssential),
+    [documents]
+  )
+
+  const expiringDocuments = useMemo(() => 
+    documents.filter(doc => {
+      if (!doc.expiryDate) return false
+      const status = getExpiryStatus(doc.expiryDate)
+      return status.status === 'expired' || status.status === 'expiring'
+    }),
+    [documents]
+  )
+
+  const documentsByCategory = useMemo(() => {
+    const grouped: Record<string, Document[]> = {}
+    documents.forEach(doc => {
+      if (!grouped[doc.category]) {
+        grouped[doc.category] = []
+      }
+      grouped[doc.category].push(doc)
+    })
+    return grouped
+  }, [documents])
+
   return {
     documents,
+    setDocuments,
     addDocument,
     updateDocument,
     deleteDocument,
-    deleteMultiple
+    deleteMultiple,
+    essentialDocuments,
+    expiringDocuments,
+    documentsByCategory
   }
 }

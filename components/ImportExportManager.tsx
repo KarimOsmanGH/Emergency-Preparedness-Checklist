@@ -5,23 +5,18 @@
 
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback, useMemo } from 'react'
 import { Download, Upload, FileJson, FileSpreadsheet, FileText, Printer, Copy, Check, FileDown } from 'lucide-react'
-import { FamilyInfo, ChecklistItem } from '@/types'
+import { FamilyInfo, ChecklistItem, MetricsSettings } from '@/types'
 import { useToast } from './Toast'
 import { downloadFile, copyToClipboard } from '@/lib/utils'
-import { STORAGE_KEYS } from '@/lib/constants'
+import { STORAGE_KEYS, APP_CONFIG } from '@/lib/constants'
 import { generatePDF } from '@/lib/pdfExport'
 
 interface ImportExportManagerProps {
   familyInfo: FamilyInfo
   checklistItems: ChecklistItem[]
-  metricsSettings: {
-    volume: string
-    weight: string
-    temperature: string
-    distance: string
-  }
+  metricsSettings: MetricsSettings
 }
 
 export default function ImportExportManager({
@@ -30,11 +25,11 @@ export default function ImportExportManager({
   metricsSettings
 }: ImportExportManagerProps) {
   const [copied, setCopied] = useState(false)
-  const [exportFormat, setExportFormat] = useState<'json' | 'csv' | 'txt'>('json')
+  const [isImporting, setIsImporting] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { showToast } = useToast()
 
-  const getAllData = () => {
+  const getAllData = useCallback(() => {
     return {
       familyInfo,
       checklistItems,
@@ -45,11 +40,11 @@ export default function ImportExportManager({
       documents: JSON.parse(localStorage.getItem(STORAGE_KEYS.DOCUMENTS) || '[]'),
       metricsSettings,
       exportDate: new Date().toISOString(),
-      appVersion: '1.1.0'
+      appVersion: APP_CONFIG.VERSION
     }
-  }
+  }, [familyInfo, checklistItems, metricsSettings])
 
-  const handleExportJSON = () => {
+  const handleExportJSON = useCallback(() => {
     const data = getAllData()
     const json = JSON.stringify(data, null, 2)
     downloadFile(
@@ -58,9 +53,9 @@ export default function ImportExportManager({
       'application/json'
     )
     showToast('success', 'Data exported as JSON successfully')
-  }
+  }, [getAllData, showToast])
 
-  const handleExportCSV = () => {
+  const handleExportCSV = useCallback(() => {
     const data = getAllData()
     let csv = 'Category,Name,Details,Status\n'
     
@@ -77,9 +72,9 @@ export default function ImportExportManager({
       'text/csv'
     )
     showToast('success', 'Data exported as CSV successfully')
-  }
+  }, [getAllData, showToast])
 
-  const handleExportText = () => {
+  const handleExportText = useCallback(() => {
     const data = getAllData()
     let text = '=== EMERGENCY PREPAREDNESS CHECKLIST ===\n\n'
     
@@ -104,9 +99,9 @@ export default function ImportExportManager({
       'text/plain'
     )
     showToast('success', 'Data exported as text successfully')
-  }
+  }, [getAllData, showToast])
 
-  const handleCopyJSON = async () => {
+  const handleCopyJSON = useCallback(async () => {
     const data = getAllData()
     const json = JSON.stringify(data, null, 2)
     const success = await copyToClipboard(json)
@@ -118,24 +113,26 @@ export default function ImportExportManager({
     } else {
       showToast('error', 'Failed to copy to clipboard')
     }
-  }
+  }, [getAllData, showToast])
 
-  const handlePrint = () => {
+  const handlePrint = useCallback(() => {
     window.print()
     showToast('info', 'Opening print dialog')
-  }
+  }, [showToast])
 
-  const handleExportPDF = () => {
+  const handleExportPDF = useCallback(() => {
     const data = getAllData()
     generatePDF(data)
     showToast('success', 'Generating PDF...')
-  }
+  }, [getAllData, showToast])
 
-  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImport = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
+    setIsImporting(true)
     const reader = new FileReader()
+    
     reader.onload = (e) => {
       try {
         const content = e.target?.result as string
@@ -179,7 +176,14 @@ export default function ImportExportManager({
       } catch (error) {
         console.error('Import error:', error)
         showToast('error', 'Failed to import data. Please check the file format.')
+      } finally {
+        setIsImporting(false)
       }
+    }
+    
+    reader.onerror = () => {
+      showToast('error', 'Failed to read file')
+      setIsImporting(false)
     }
     
     reader.readAsText(file)
@@ -188,9 +192,9 @@ export default function ImportExportManager({
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
-  }
+  }, [showToast])
 
-  const getDataCounts = () => {
+  const counts = useMemo(() => {
     const data = getAllData()
     return {
       checklistItems: data.checklistItems.reduce((sum, cat) => sum + cat.items.length, 0),
@@ -200,9 +204,7 @@ export default function ImportExportManager({
       frequencies: data.frequencies.length,
       documents: data.documents.length
     }
-  }
-
-  const counts = getDataCounts()
+  }, [getAllData])
 
   return (
     <div className="p-6">
@@ -216,7 +218,7 @@ export default function ImportExportManager({
       </div>
 
       {/* Data Summary */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+      <section className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
           Your Data Summary
         </h3>
@@ -258,12 +260,12 @@ export default function ImportExportManager({
             <div className="text-sm text-gray-600 dark:text-gray-400">Documents</div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Import Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+      <section className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <Upload className="h-5 w-5 mr-2" />
+          <Upload className="h-5 w-5 mr-2" aria-hidden="true" />
           Import Data
         </h3>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
@@ -276,20 +278,24 @@ export default function ImportExportManager({
           onChange={handleImport}
           className="hidden"
           id="import-file"
+          aria-label="Choose file to import"
+          disabled={isImporting}
         />
         <label
           htmlFor="import-file"
-          className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+          className={`inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 dark:focus-within:ring-offset-gray-800 ${
+            isImporting ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
-          <Upload className="h-4 w-4" />
-          <span>Choose File to Import</span>
+          <Upload className="h-4 w-4" aria-hidden="true" />
+          <span>{isImporting ? 'Importing...' : 'Choose File to Import'}</span>
         </label>
-      </div>
+      </section>
 
       {/* Export Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <section className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <Download className="h-5 w-5 mr-2" />
+          <Download className="h-5 w-5 mr-2" aria-hidden="true" />
           Export Data
         </h3>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
@@ -299,56 +305,56 @@ export default function ImportExportManager({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <button
             onClick={handleExportJSON}
-            className="flex items-center justify-center space-x-2 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            className="flex items-center justify-center space-x-2 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
           >
-            <FileJson className="h-5 w-5" />
+            <FileJson className="h-5 w-5" aria-hidden="true" />
             <span>Export as JSON</span>
           </button>
           
           <button
             onClick={handleExportCSV}
-            className="flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
           >
-            <FileSpreadsheet className="h-5 w-5" />
+            <FileSpreadsheet className="h-5 w-5" aria-hidden="true" />
             <span>Export as CSV</span>
           </button>
           
           <button
             onClick={handleExportText}
-            className="flex items-center justify-center space-x-2 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="flex items-center justify-center space-x-2 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
           >
-            <FileText className="h-5 w-5" />
+            <FileText className="h-5 w-5" aria-hidden="true" />
             <span>Export as Text</span>
           </button>
           
           <button
             onClick={handleCopyJSON}
-            className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
           >
-            {copied ? <Check className="h-5 w-5" /> : <Copy className="h-5 w-5" />}
+            {copied ? <Check className="h-5 w-5" aria-hidden="true" /> : <Copy className="h-5 w-5" aria-hidden="true" />}
             <span>{copied ? 'Copied!' : 'Copy JSON'}</span>
           </button>
           
           <button
             onClick={handleExportPDF}
-            className="flex items-center justify-center space-x-2 px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            className="flex items-center justify-center space-x-2 px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
           >
-            <FileDown className="h-5 w-5" />
+            <FileDown className="h-5 w-5" aria-hidden="true" />
             <span>Export as PDF</span>
           </button>
           
           <button
             onClick={handlePrint}
-            className="flex items-center justify-center space-x-2 px-4 py-3 bg-brown-600 text-white rounded-lg hover:bg-brown-700 transition-colors"
+            className="flex items-center justify-center space-x-2 px-4 py-3 bg-brown-600 text-white rounded-lg hover:bg-brown-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brown-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
           >
-            <Printer className="h-5 w-5" />
+            <Printer className="h-5 w-5" aria-hidden="true" />
             <span>Print</span>
           </button>
         </div>
-      </div>
+      </section>
 
       {/* Tips */}
-      <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+      <aside className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
         <h4 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">
           💡 Backup Tips
         </h4>
@@ -358,7 +364,7 @@ export default function ImportExportManager({
           <li>• JSON format is recommended for complete backup with all features</li>
           <li>• CSV format is useful for importing into spreadsheet applications</li>
         </ul>
-      </div>
+      </aside>
     </div>
   )
 }
