@@ -196,8 +196,8 @@ function HomeContent() {
               {isEditingFamily ? (
                 <div className="space-y-3">
                   <div className="grid grid-cols-3 gap-2">
-                    <div>
-                      <label htmlFor="adults" className="block text-xs font-medium text-sand-500 dark:text-sand-400 mb-1.5">Adults</label>
+                    <div className="min-w-0">
+                      <label htmlFor="adults" className="block text-[10px] font-medium text-sand-500 dark:text-sand-400 mb-1 truncate">Adults</label>
                       <input
                         id="adults"
                         type="number"
@@ -207,8 +207,8 @@ function HomeContent() {
                         className="input-field text-center text-sm py-2"
                       />
                     </div>
-                    <div>
-                      <label htmlFor="children" className="block text-xs font-medium text-sand-500 dark:text-sand-400 mb-1.5">Children</label>
+                    <div className="min-w-0">
+                      <label htmlFor="children" className="block text-[10px] font-medium text-sand-500 dark:text-sand-400 mb-1 truncate">Children</label>
                       <input
                         id="children"
                         type="number"
@@ -218,8 +218,8 @@ function HomeContent() {
                         className="input-field text-center text-sm py-2"
                       />
                     </div>
-                    <div>
-                      <label htmlFor="pets" className="block text-xs font-medium text-sand-500 dark:text-sand-400 mb-1.5">Pets</label>
+                    <div className="min-w-0">
+                      <label htmlFor="pets" className="block text-[10px] font-medium text-sand-500 dark:text-sand-400 mb-1 truncate">Pets</label>
                       <input
                         id="pets"
                         type="number"
@@ -239,15 +239,15 @@ function HomeContent() {
                 </div>
               ) : (
                 <>
-                  <div className="grid grid-cols-3 gap-3 text-center">
+                  <div className="grid grid-cols-3 gap-2 text-center">
                     {[
                       { label: 'Adults', value: familyInfo.adults },
                       { label: 'Children', value: familyInfo.children },
                       { label: 'Pets', value: familyInfo.pets },
                     ].map((item, i) => (
-                      <div key={item.label} className={`p-3 rounded-lg bg-sand-50 dark:bg-forest-800/50 border border-sand-200 dark:border-forest-700 animate-scale-in stagger-${i + 1}`}>
-                        <div className="text-2xl font-bold text-forest-600 dark:text-forest-400">{item.value}</div>
-                        <div className="text-xs font-medium text-sand-500 dark:text-sand-400 uppercase tracking-wide">{item.label}</div>
+                      <div key={item.label} className={`p-2 rounded-lg bg-sand-50 dark:bg-forest-800/50 border border-sand-200 dark:border-forest-700 animate-scale-in stagger-${i + 1} min-w-0`}>
+                        <div className="text-xl font-bold text-forest-600 dark:text-forest-400">{item.value}</div>
+                        <div className="text-[10px] font-medium text-sand-500 dark:text-sand-400 uppercase truncate">{item.label}</div>
                       </div>
                     ))}
                   </div>
