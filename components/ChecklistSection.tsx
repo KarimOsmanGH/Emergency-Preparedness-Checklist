@@ -119,50 +119,6 @@ export default function ChecklistSection({
         </div>
       </div>
 
-      {/* Overall Progress */}
-      <div className="mb-8">
-        <div className="relative overflow-hidden rounded-2xl p-6 bg-gradient-to-br from-forest-600 via-forest-700 to-forest-800 text-white shadow-tactical">
-          {/* Background pattern */}
-          <div className="absolute inset-0 bg-tactical-pattern opacity-10" />
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-bold text-white/90">Overall Progress</h3>
-                <p className="text-sm text-forest-100/70 mt-0.5">Keep going, you&apos;re doing great!</p>
-              </div>
-              <div className="text-right">
-                <div className="text-4xl font-bold">{overallProgress.percentage}%</div>
-                <div className="text-xs text-forest-100/70 mt-0.5">Complete</div>
-              </div>
-            </div>
-            
-            <div className="w-full bg-white/20 rounded-full h-4 mb-3 overflow-hidden">
-              <div 
-                className="h-full rounded-full bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 transition-all duration-700 ease-out relative"
-                style={{ width: `${overallProgress.percentage}%` }}
-                role="progressbar"
-                aria-valuenow={overallProgress.percentage}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label={`${overallProgress.percentage}% complete`}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
-              </div>
-            </div>
-            
-            <div className="flex justify-between text-sm">
-              <span className="text-forest-100/80">
-                <span className="font-semibold text-white">{overallProgress.completedItems}</span> of {overallProgress.totalItems} items completed
-              </span>
-              <span className="font-medium text-amber-300">
-                {overallProgress.totalItems - overallProgress.completedItems} remaining
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Checklist Items */}
       {selectedCategory === null ? (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
