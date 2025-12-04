@@ -234,7 +234,7 @@ export default function ChecklistSection({
                             )}
                           </button>
                           
-                          <span className={`flex-1 min-w-0 text-sm leading-relaxed ${
+                          <span className={`flex-1 min-w-0 text-sm leading-relaxed break-words ${
                             item.completed 
                               ? 'line-through text-sand-400 dark:text-sand-600' 
                               : 'text-forest-800 dark:text-sand-200'
@@ -329,7 +329,7 @@ export default function ChecklistSection({
                             )}
                           </button>
                           
-                          <span className={`flex-1 min-w-0 text-sm leading-relaxed ${
+                          <span className={`flex-1 min-w-0 text-sm leading-relaxed break-words ${
                             item.completed 
                               ? 'line-through text-sand-400 dark:text-sand-600' 
                               : 'text-forest-800 dark:text-sand-200'

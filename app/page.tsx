@@ -154,17 +154,6 @@ function HomeContent() {
             </div>
             
             <div className="flex items-center gap-3">
-              {/* Progress indicator in header */}
-              <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-xl bg-sand-100 dark:bg-forest-800 border border-sand-200 dark:border-forest-700">
-                <div className="text-xs font-medium text-sand-600 dark:text-sand-400">Progress</div>
-                <div className="w-24 h-2 rounded-full bg-sand-200 dark:bg-forest-700 overflow-hidden">
-                  <div 
-                    className="h-full rounded-full bg-gradient-to-r from-forest-400 to-forest-600 transition-all duration-500"
-                    style={{ width: `${stats.percentage}%` }}
-                  />
-                </div>
-                <div className="text-sm font-bold text-forest-600 dark:text-forest-400">{stats.percentage}%</div>
-              </div>
               <ThemeToggle />
             </div>
           </div>
